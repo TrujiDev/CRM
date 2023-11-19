@@ -75,7 +75,7 @@
 		const openConnection = window.indexedDB.open('crm', 1);
 
 		openConnection.onerror = function () {
-			console.log('Something went wrong');
+			console.error('Something went wrong');
 		};
 
 		openConnection.onsuccess = function () {
