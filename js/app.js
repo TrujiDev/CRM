@@ -1,4 +1,6 @@
 (function () {
+	const customerList = document.querySelector('#customers-list');
+
 	let DB;
 
 	document.addEventListener('DOMContentLoaded', function () {
@@ -7,6 +9,8 @@
 		if (window.indexedDB.open('crm', 1)) {
 			getCustomers();
 		}
+
+		customerList.addEventListener('click', deleteCustomer);
 	});
 
 	/**
@@ -17,7 +21,7 @@
 		const createDB = window.indexedDB.open('crm', 1);
 
 		createDB.onerror = function () {
-			console.log('Something went wrong');
+			console.error('Something went wrong');
 		};
 
 		createDB.onsuccess = function () {
@@ -37,8 +41,6 @@
 			objectStore.createIndex("Customer's Phone", 'phone', { unique: true });
 			objectStore.createIndex("Customer's Company", 'company', { unique: false });
 			objectStore.createIndex("Customer's ID", 'id', { unique: true });
-
-			console.log('DB created successfully');
 		};
 	}
 
@@ -50,7 +52,7 @@
 		const openConnection = window.indexedDB.open('crm', 1);
 
 		openConnection.onerror = function () {
-			console.log('Something went wrong');
+			console.error('Something went wrong');
 		};
 
 		openConnection.onsuccess = function () {
@@ -63,8 +65,6 @@
 
 				if (cursor) {
 					const { name, email, phone, company, id } = cursor.value;
-
-					const customerList = document.querySelector('#customers-list');
 
 					customerList.innerHTML += `
 						<tr>
@@ -89,5 +89,35 @@
 				}
 			};
 		};
+	}
+
+	/**
+	 * Deletes a customer from the database.
+	 * @function deleteCustomer
+	 * @param {object} event - The event object.
+	 */
+	function deleteCustomer(event) {
+		if (event.target.classList.contains('delete')) {
+			const id = Number(event.target.dataset.customer);
+
+			const confirmation = confirm(
+				'Are you sure you want to delete this customer?'
+			);
+
+			if (confirmation) {
+				const transaction = DB.transaction(['crm'], 'readwrite');
+				const objectStore = transaction.objectStore('crm');
+
+				objectStore.delete(id);
+
+				transaction.oncomplete = function () {
+					event.target.parentElement.parentElement.remove();
+				};
+
+				transaction.onerror = function () {
+					console.error('Something went wrong');
+				};
+			}
+		}
 	}
 })();
