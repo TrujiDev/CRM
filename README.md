@@ -24,10 +24,10 @@ No special configuration is required to use the project. Ensure you have an inte
 
 ## Developer
 
-[TrujiDev]
+TrujiDev
 
 For more details and improvements, feel free to explore and modify the source code!
 
 ---
 
-Thank you for using the IndexedDB-based CRM! If you have any questions or issues, please don't hesitate to contact [TrujiDev].
+Thank you for using the IndexedDB-based CRM! If you have any questions or issues, please don't hesitate to contact TrujiDev.
