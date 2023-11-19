@@ -5,7 +5,7 @@ function connectDB() {
 	const openConnection = window.indexedDB.open('crm', 1);
 
 	openConnection.onerror = function () {
-		console.log('There was an error');
+		console.error('There was an error');
 	};
 
 	openConnection.onsuccess = function () {
