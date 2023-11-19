@@ -1,14 +1,20 @@
 (function () {
-    const nameInput = document.querySelector('#name');
-    const emailInput = document.querySelector('#email');
-    const phoneInput = document.querySelector('#phone');
-    const companyInput = document.querySelector('#company');
+	const form = document.querySelector('#form');
+	const nameInput = document.querySelector('#name');
+	const emailInput = document.querySelector('#email');
+	const phoneInput = document.querySelector('#phone');
+	const companyInput = document.querySelector('#company');
 
 	let DB;
+	let customerID;
 
 	document.addEventListener('DOMContentLoaded', function () {
+		connectDB();
+
+		form.addEventListener('submit', updateCustomer);
+
 		const urlParams = new URLSearchParams(window.location.search);
-		const customerID = urlParams.get('id');
+		customerID = urlParams.get('id');
 
 		if (customerID) {
 			setTimeout(() => {
@@ -16,6 +22,45 @@
 			}, 100);
 		}
 	});
+
+	function updateCustomer(event) {
+		event.preventDefault();
+
+		if (
+			nameInput.value === '' ||
+			emailInput.value === '' ||
+			phoneInput.value === '' ||
+			companyInput.value === ''
+		) {
+			printAlert('All fields are required', 'error');
+			return;
+		}
+
+		const updatedCustomer = {
+			name: nameInput.value,
+			email: emailInput.value,
+			phone: phoneInput.value,
+			company: companyInput.value,
+			id: Number(customerID),
+		};
+
+		const transaction = DB.transaction(['crm'], 'readwrite');
+		const objectStore = transaction.objectStore('crm');
+
+		objectStore.put(updatedCustomer);
+
+		transaction.oncomplete = function () {
+			printAlert('Updated successfully');
+
+			setTimeout(() => {
+				window.location.href = 'index.html';
+			}, 2000);
+        };
+        
+        transaction.onerror = function () {
+            printAlert('There was an error', 'error');
+        };
+	}
 
 	/**
 	 * Gets a customer from the database.
@@ -55,13 +100,12 @@
 	 * @function fillForm
 	 * @param {object} customer - The customer object.
 	 */
-    function fillForm(customer) {
-        const { name, email, phone, company, id } = customer;
+	function fillForm(customer) {
+		const { name, email, phone, company } = customer;
 
-        nameInput.value = name;
-        emailInput.value = email;
-        phoneInput.value = phone;
-        companyInput.value = company;
-        idInput.value = id;
-    }
+		nameInput.value = name;
+		emailInput.value = email;
+		phoneInput.value = phone;
+		companyInput.value = company;
+	}
 })();
