@@ -35,6 +35,12 @@
 		}
 	}
 
+/**
+ * Prints an alert message on the screen.
+ * 
+ * @param {string} message - The message to be displayed in the alert.
+ * @param {string} type - The type of alert. Possible values are 'error' or any other value for success alert.
+ */
 	function printAlert(message, type) {
 		const alert = document.querySelector('.alert');
 
