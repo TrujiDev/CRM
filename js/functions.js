@@ -1,3 +1,6 @@
+/**
+ * Connects to the indexedDB database named 'crm'.
+ */
 function connectDB() {
 	const openConnection = window.indexedDB.open('crm', 1);
 
