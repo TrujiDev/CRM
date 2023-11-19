@@ -23,6 +23,10 @@
 		}
 	});
 
+	/**
+	 * Updates a customer in the CRM system.
+	 * @param {Event} event - The event object.
+	 */
 	function updateCustomer(event) {
 		event.preventDefault();
 
